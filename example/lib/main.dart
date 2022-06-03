@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_plugin_viewer4/flutter_plugin_viewer4.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,12 +31,7 @@ class _MyAppState extends State<MyApp> {
             height: 200,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: AndroidView(
-                viewType: viewType,
-                layoutDirection: TextDirection.ltr,
-                creationParams: creationParams,
-                creationParamsCodec: const StandardMessageCodec(),
-              ),
+              child: FlutterPluginViewer4(),
             ),
           )
       ),
