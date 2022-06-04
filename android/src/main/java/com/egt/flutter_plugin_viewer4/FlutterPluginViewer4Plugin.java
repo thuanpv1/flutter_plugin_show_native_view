@@ -3,10 +3,10 @@ package com.egt.flutter_plugin_viewer4;
 //import androidx.annotation.NonNull;
 //
 //import io.flutter.embedding.engine.plugins.FlutterPlugin;
-//import io.flutter.plugin.common.MethodCall;
-//import io.flutter.plugin.common.MethodChannel;
-//import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-//import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+import io.flutter.plugin.common.MethodChannel.Result;
 
 ///** FlutterPluginViewer4Plugin */
 //public class FlutterPluginViewer4Plugin implements FlutterPlugin, MethodCallHandler {
@@ -40,14 +40,31 @@ package com.egt.flutter_plugin_viewer4;
 import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 
-public class FlutterPluginViewer4Plugin implements FlutterPlugin {
+public class FlutterPluginViewer4Plugin implements FlutterPlugin, MethodCallHandler {
+  private MethodChannel channel;
+
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
     binding
             .getPlatformViewRegistry()
             .registerViewFactory("<platform-view-type>", new NativeViewFactory());
+
+    channel = new MethodChannel(binding.getBinaryMessenger(), "flutter_plugin_viewer4");
+    channel.setMethodCallHandler(this);
   }
 
   @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {}
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+  }
+
+
+  @Override
+  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+    if (call.method.equals("getPlatformVersion")) {
+      result.success("Android " + android.os.Build.VERSION.RELEASE);
+    } else {
+      result.notImplemented();
+    }
+  }
 }
